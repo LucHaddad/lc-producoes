@@ -1,0 +1,277 @@
+.date-picker-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Caixa do input com botão de calendário embutido */
+.date-input-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  background: #141413;
+  border: 1px solid rgb(244 242 238 / 18%);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.date-input-box:focus-within,
+.date-input-box.is-focused {
+  border-color: var(--gold, #e3a92b);
+  box-shadow: 0 0 0 1px rgba(227, 169, 43, 0.25);
+}
+
+.quote-field [aria-invalid="true"].date-input-box,
+.date-input-box:has(input[aria-invalid="true"]) {
+  border-color: #e8a08a;
+}
+
+/* Campo de digitação de data */
+.date-input-field {
+  flex: 1;
+  min-width: 0;
+  border: none !important;
+  background: transparent !important;
+  color: var(--fg, #f4f2ee);
+  font-family: inherit;
+  font-size: 16px !important; /* 16px evita zoom automático indesejado no iOS Safari */
+  padding: 13px 10px 13px 14px !important;
+  min-height: 48px;
+  outline: none;
+  letter-spacing: 0.05em;
+}
+
+.date-input-field::placeholder {
+  color: #817d75;
+  letter-spacing: normal;
+}
+
+/* Botão de abrir/fechar o calendário */
+.date-calendar-btn {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  min-height: 48px;
+  background: transparent;
+  border: none;
+  color: var(--gold, #e3a92b);
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 180ms ease, transform 150ms ease;
+}
+
+.date-calendar-btn:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+.date-calendar-btn:focus-visible {
+  outline: 2px solid var(--gold, #e3a92b);
+  outline-offset: -2px;
+}
+
+/* ---------------- Calendário Flutuante ---------------- */
+.floating-calendar {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 100;
+  width: 320px;
+  max-width: min(340px, 94vw);
+  background: #121211;
+  border: 1px solid rgba(227, 169, 43, 0.4);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(227, 169, 43, 0.15);
+  padding: 18px 16px 14px;
+  border-radius: 4px;
+  animation: calendarPop 180ms ease-out;
+}
+
+@keyframes calendarPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cabeçalho do calendário (Mês/Ano e setas) */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.calendar-title {
+  color: var(--fg, #f4f2ee);
+  font-family: "Jost", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.calendar-title strong {
+  color: var(--gold, #e3a92b);
+  font-weight: 600;
+}
+
+.calendar-nav-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  background: #1b1a17;
+  border: 1px solid rgba(244, 242, 238, 0.1);
+  color: var(--fg, #f4f2ee);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.calendar-nav-btn:hover:not(:disabled) {
+  background: #28251e;
+  border-color: var(--gold, #e3a92b);
+  color: var(--gold, #e3a92b);
+}
+
+.calendar-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* Dias da semana (cabeçalho) */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(244, 242, 238, 0.08);
+}
+
+.weekday-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted, #b9b5ac);
+}
+
+/* Grade de dias */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-height: 36px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--fg, #f4f2ee);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 140ms ease;
+  padding: 0;
+}
+
+.calendar-day-btn:hover:not(:disabled):not(.is-selected) {
+  background: #24221b;
+  border-color: rgba(227, 169, 43, 0.35);
+  color: var(--gold, #e3a92b);
+}
+
+/* Dias fora do mês atual */
+.calendar-day-btn.is-outside {
+  color: #55524b;
+}
+
+/* Dias no passado */
+.calendar-day-btn.is-past,
+.calendar-day-btn:disabled {
+  color: #3f3e3a;
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Dia de hoje */
+.calendar-day-btn.is-today:not(.is-selected) {
+  border-color: rgba(227, 169, 43, 0.6);
+  font-weight: 600;
+}
+
+/* Dia selecionado */
+.calendar-day-btn.is-selected {
+  background: var(--gold, #e3a92b) !important;
+  color: #0b0b0b !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(227, 169, 43, 0.4);
+}
+
+/* Rodapé do calendário */
+.calendar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(244, 242, 238, 0.08);
+}
+
+.calendar-today-btn,
+.calendar-close-btn {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 150ms ease;
+}
+
+.calendar-today-btn {
+  color: var(--gold, #e3a92b);
+  font-weight: 600;
+}
+
+.calendar-today-btn:hover {
+  text-decoration: underline;
+}
+
+.calendar-close-btn {
+  color: var(--muted, #b9b5ac);
+}
+
+.calendar-close-btn:hover {
+  color: var(--fg, #f4f2ee);
+}
+
+/* ---------------- Ajustes Mobile ---------------- */
+@media (max-width: 640px) {
+  .floating-calendar {
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    padding: 16px 12px 12px;
+  }
+
+  .calendar-day-btn {
+    min-height: 40px; /* Alvo de toque mais confortável no celular */
+    font-size: 14px;
+  }
+
+  .calendar-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
